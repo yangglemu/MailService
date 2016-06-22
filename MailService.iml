@@ -8,6 +8,9 @@
     <orderEntry type="jdk" jdkName="1.8" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="kotlin-runtime" level="project" />
-    <orderEntry type="library" name="libs" level="project" />
+    <orderEntry type="library" name="mail" level="project" />
+    <orderEntry type="library" name="mysql-connector-java-5.1.37-bin" level="project" />
+    <orderEntry type="library" name="kotlin-reflect" level="project" />
+    <orderEntry type="library" name="kotlin-runtime-sources" level="project" />
   </component>
 </module>

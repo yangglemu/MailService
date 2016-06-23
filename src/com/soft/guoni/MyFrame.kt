@@ -48,7 +48,7 @@ class MyFrame(title: String) : JFrame(title) {
         panel.add(quit)
         panel.add(Box.createVerticalGlue())
         delete.addActionListener { clean() }
-        start.addActionListener { start() }
+        start.addActionListener { }
         quit.addActionListener { end() }
 
         contentPane = panel

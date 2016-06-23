@@ -31,6 +31,7 @@ class Email(val connection: Connection) {
         val subject = "sunshine"
         val timeOfHour = 1000 * 60 * 60
         val formatString = "yyyy-MM-dd"
+        val log = Log.log
     }
 
     fun send(content: String) {
@@ -46,8 +47,12 @@ class Email(val connection: Connection) {
         msg.setFrom(InternetAddress(mailBox))
         msg.setRecipients(MimeMessage.RecipientType.TO, mailBox)
         msg.subject = subject
+        msg.sentDate = Date()
         msg.setText(content)
-        Transport.send(msg)
+        try {
+            Transport.send(msg)
+        } catch(e: Exception) {
+        }
     }
 
     fun postMsg() {
@@ -61,9 +66,10 @@ class Email(val connection: Connection) {
         val folder = store.getFolder("INBOX")
         folder.open(Folder.READ_WRITE)
         val today = Date().toString(formatString)
-
         for (msg in folder.messages) {
-            if (msg.sentDate.toString(formatString) == today) {
+            if (msg.subject != "sunshine") {
+                msg.setFlag(Flags.Flag.DELETED, true)
+            } else if (msg.sentDate.toString(formatString) == today) {
                 msg.setFlag(Flags.Flag.DELETED, true)
             }
         }
@@ -96,12 +102,11 @@ class Email(val connection: Connection) {
             element.setAttribute("sl", sl)
             goods.appendChild(element)
         }
-
         val res_sale_mx = statement.executeQuery("select sale_mx.id as id,sale_db.rq as rq,sale_mx.sj as tm,sale_mx.sl as sl,"
                 + "sale_mx.zq as zq,sale_mx.je as je from sale_mx join sale_db "
                 + "on(sale_mx.djh=sale_db.djh) where date(sale_db.rq)='${date.toString(formatString)}'")
         val sale_mx = doc.createElement("sale_mx")
-        root.appendChild(sale_mx)
+
         while (res_sale_mx.next()) {
             val id = res_sale_mx.getString("id")
             val rq = res_sale_mx.getString("rq")
@@ -118,7 +123,6 @@ class Email(val connection: Connection) {
             element.setAttribute("je", je)
             sale_mx.appendChild(element)
         }
-
         val res_sale_db = statement.executeQuery("select rq,sl,je from sale_db where date(rq)='${date.toString(formatString)}'")
         val sale_db = doc.createElement("sale_db")
         root.appendChild(sale_db)
@@ -133,6 +137,8 @@ class Email(val connection: Connection) {
             sale_db.appendChild(element)
         }
         res_goods.close()
+        res_sale_db.close()
+        root.appendChild(sale_mx)
         statement.close()
 
         val stream = ByteArrayOutputStream()

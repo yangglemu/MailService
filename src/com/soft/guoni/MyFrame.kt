@@ -3,14 +3,12 @@ package com.soft.guoni
 import java.awt.*
 import java.awt.event.WindowAdapter
 import java.awt.event.WindowEvent
-import java.io.File
 import java.sql.DriverManager
 import java.util.*
 import javax.swing.Box
 import javax.swing.BoxLayout
 import javax.swing.JFrame
 import javax.swing.JPanel
-import javax.xml.parsers.DocumentBuilderFactory
 import kotlin.system.exitProcess
 
 /**
@@ -21,9 +19,7 @@ class MyFrame(title: String) : JFrame(title) {
     var timer: Timer = Timer()
     val email: Email by lazy { Email(DriverManager.getConnection(url)) }
 
-    lateinit var path: String
     lateinit var trayIcon: TrayIcon
-    var minuteCount: Int = 0
 
     companion object {
         val log = Log.log
@@ -71,17 +67,8 @@ class MyFrame(title: String) : JFrame(title) {
 
     }
 
-    private fun createConfig() {
-        val doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(File("D:/D-drive-33671/duobao/res/config.xml"))
-        val root = doc.documentElement
-        val icon = root.getElementsByTagName("icon").item(0)
-        val minutes = root.getElementsByTagName("minutes").item(0)
-        this.minuteCount = minutes.textContent.toInt()
-        this.path = icon.textContent
-    }
-
     private fun createTray() {
-        createConfig()
+        val path = javaClass.getResource("/res/icon.png")
         val img = toolkit.createImage(path)
         val menu = PopupMenu()
         val normal = MenuItem("显示")

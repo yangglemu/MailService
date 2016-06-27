@@ -22,8 +22,6 @@ class MyFrame(title: String) : JFrame(title) {
     lateinit var trayIcon: TrayIcon
 
     companion object {
-        val log = Log.log
-        val minute = 1000 * 60
         val url = "jdbc:mysql://pc201408020832:3306/duobao?user=root&password=yuanbo960502"
     }
 
@@ -43,7 +41,7 @@ class MyFrame(title: String) : JFrame(title) {
         panel.add(Box.createVerticalGlue())
         panel.add(quit)
         panel.add(Box.createVerticalGlue())
-        delete.addActionListener { clean() }
+        delete.addActionListener { }
         start.addActionListener { }
         quit.addActionListener { end() }
 
@@ -61,10 +59,6 @@ class MyFrame(title: String) : JFrame(title) {
             }
         })
         createTray()
-    }
-
-    private fun clean() {
-
     }
 
     private fun createTray() {
@@ -91,8 +85,15 @@ class MyFrame(title: String) : JFrame(title) {
         val times: Long = 30 * 1000 * 60
         timer.schedule(object : java.util.TimerTask() {
             override fun run() {
-                email.postMsg()
-                trayIcon.displayMessage("[${ Date().toString("yyyy-MM-dd HH:mm:ss") }]，最新数据发送成功！", "阳光服饰", TrayIcon.MessageType.INFO)
+                try {
+                    email.postMsg()
+                    val text = "[${ Date().toString("yyyy-MM-dd HH:mm:ss") }]，最新数据发送成功！"
+                    Log.log.info("邮件发送成功！")
+                    trayIcon.displayMessage("阳光服饰", text, TrayIcon.MessageType.INFO)
+                } catch(e: Exception) {
+                    Log.log.warning("邮件发送错误,${e.stackTrace}")
+                    trayIcon.displayMessage("阳光服饰", "邮件发送失败！", TrayIcon.MessageType.ERROR)
+                }
             }
         }, delay, times)
     }

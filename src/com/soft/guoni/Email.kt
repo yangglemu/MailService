@@ -52,6 +52,8 @@ class Email(val connection: Connection) {
         try {
             Transport.send(msg)
         } catch(e: Exception) {
+            Log.log.warning("${e.cause}, ${e.message}")
+            Log.log.warning("${e.stackTrace}")
         }
     }
 
@@ -67,15 +69,32 @@ class Email(val connection: Connection) {
         folder.open(Folder.READ_WRITE)
         val today = Date().toString(formatString)
         for (msg in folder.messages) {
-            if (msg.subject != "sunshine") {
+            /*
+            if (msg.subject !== "sunshine") {
                 msg.setFlag(Flags.Flag.DELETED, true)
-            } else if (msg.sentDate.toString(formatString) == today) {
+                continue
+            } else if (msg.sentDate.toString(formatString) === today) {
+                msg.setFlag(Flags.Flag.DELETED, true)
+                continue
+            } else if (isOldMessage(msg)) {
+                msg.setFlag(Flags.Flag.DELETED, true)
+            }*/
+            if (msg.subject != "sunshine" || msg.sentDate.toString(formatString) == today || isOldMessage(msg)) {
                 msg.setFlag(Flags.Flag.DELETED, true)
             }
         }
         folder.close(true)
         val content = document2String(Date())
         send(content)
+    }
+
+    fun isOldMessage(msg: Message): Boolean {
+        var isOld = false
+        val now = Date().time
+        val start = msg.sentDate.time
+        val diff = 1000L * 60 * 60 * 24 * 30
+        if (now - start > diff) isOld = true
+        return isOld
     }
 
     fun string2Document(content: String): Document {

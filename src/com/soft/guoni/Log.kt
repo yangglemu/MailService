@@ -1,5 +1,7 @@
 package com.soft.guoni
 
+import java.util.logging.FileHandler
+import java.util.logging.Level
 import java.util.logging.Logger
 
 /**
@@ -8,8 +10,10 @@ import java.util.logging.Logger
 class Log {
     companion object {
         val log: Logger by lazy {
-            System.setProperty("java.util.logging.config.file", "D:/D-drive-33671/duobao/res/log.properties")
-            Logger.getLogger("myLogger")
+           val myLog = Logger.getLogger("myLog")
+            myLog.level= Level.ALL
+            myLog.addHandler(FileHandler("myLog.log"))
+            myLog
         }
     }
 }

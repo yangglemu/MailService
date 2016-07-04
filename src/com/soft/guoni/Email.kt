@@ -7,7 +7,10 @@ import java.io.StringReader
 import java.sql.Connection
 import java.text.SimpleDateFormat
 import java.util.*
-import javax.mail.*
+import javax.mail.Flags
+import javax.mail.Folder
+import javax.mail.Message
+import javax.mail.Session
 import javax.mail.internet.InternetAddress
 import javax.mail.internet.MimeMessage
 import javax.xml.parsers.DocumentBuilderFactory
@@ -23,69 +26,57 @@ class Email(val connection: Connection) {
     companion object {
         val smtpHost = "smtp.163.com"
         val pop3Host = "pop.163.com"
-        val smtpPort = 465
-        val pop3Port = 995
         val username = "yangglemu"
         val password = "yuanbo132"
         val mailBox = "yangglemu@163.com"
         val subject = "sunshine"
-        val timeOfHour = 1000 * 60 * 60
         val formatString = "yyyy-MM-dd"
-        val log = Log.log
     }
 
     fun send(content: String) {
-        var p = Properties()
-        p.put("mail.smtp.ssl.enable", true)
-        p.put("mail.smtp.host", smtpHost)
-        p.put("mail.smtp.port", smtpPort)
-        p.put("mail.smtp.auth", true)
-        var session = Session.getInstance(p, object : Authenticator() {
-            override fun getPasswordAuthentication() = PasswordAuthentication(username, password)
-        })
-        var msg = MimeMessage(session)
+        val session = Session.getInstance(Properties())
+        val msg = MimeMessage(session)
         msg.setFrom(InternetAddress(mailBox))
-        msg.setRecipients(MimeMessage.RecipientType.TO, mailBox)
         msg.subject = subject
         msg.sentDate = Date()
         msg.setText(content)
-        try {
-            Transport.send(msg)
-        } catch(e: Exception) {
-            Log.log.warning("${e.cause}, ${e.message}")
-            Log.log.warning("${e.stackTrace}")
-        }
+        val trans = session.getTransport("smtp")
+        trans.connect(smtpHost, username, password)
+        trans.sendMessage(msg, arrayOf(InternetAddress(mailBox)))
+        trans.close()
     }
 
     fun postMsg() {
-        val p = Properties()
-        p.put("mail.pop3.ssl.enable", true)
-        p.put("mail.pop3.host", pop3Host)
-        p.put("mail.pop3.port", pop3Port)
-        val session = Session.getInstance(p)
+        send(document2String(Date()))
+        deleteOldMessage()
+    }
+
+    fun deleteOldMessage() {
+        val session = Session.getInstance(Properties())
         val store = session.getStore("pop3")
-        store.connect(username, password)
+        store.connect(pop3Host, username, password)
         val folder = store.getFolder("INBOX")
         folder.open(Folder.READ_WRITE)
         val today = Date().toString(formatString)
+        val array = ArrayList<Message>()
         for (msg in folder.messages) {
-            /*
-            if (msg.subject !== "sunshine") {
+            if (msg.subject != "sunshine" || isOldMessage(msg)) {
                 msg.setFlag(Flags.Flag.DELETED, true)
-                continue
-            } else if (msg.sentDate.toString(formatString) === today) {
-                msg.setFlag(Flags.Flag.DELETED, true)
-                continue
-            } else if (isOldMessage(msg)) {
-                msg.setFlag(Flags.Flag.DELETED, true)
-            }*/
-            if (msg.subject != "sunshine" || msg.sentDate.toString(formatString) == today || isOldMessage(msg)) {
-                msg.setFlag(Flags.Flag.DELETED, true)
+            } else if (msg.sentDate.toString(formatString) == today) {
+
+                array.add(msg)
             }
         }
+        log.info("today's messages count: ${array.size}")
+        if (array.size > 1) {
+            for (index in 0..array.size - 2) {
+                array[index].setFlag(Flags.Flag.DELETED, true)
+                log.info("today's old message on ${array[index].sentDate.toString("yyyy-MM-dd HH:mm:ss")} is deleted!")
+            }
+        }
+        log.info("today's new message on ${array[array.size - 1].sentDate.toString("yyyy-MM-dd HH:mm:ss")} is changed!")
         folder.close(true)
-        val content = document2String(Date())
-        send(content)
+        store.close()
     }
 
     fun isOldMessage(msg: Message): Boolean {

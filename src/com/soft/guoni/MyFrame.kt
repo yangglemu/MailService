@@ -5,7 +5,6 @@ import java.awt.event.WindowAdapter
 import java.awt.event.WindowEvent
 import java.sql.DriverManager
 import java.util.*
-import javax.swing.Box
 import javax.swing.BoxLayout
 import javax.swing.JFrame
 import javax.swing.JPanel
@@ -30,19 +29,7 @@ class MyFrame(title: String) : JFrame(title) {
         panel.layout = BoxLayout(panel, BoxLayout.Y_AXIS)
         val quit = Button("Exit-退出程序")
         quit.size = Dimension(100, 35)
-        val delete = Button("Clean-清理过时邮件")
-        delete.size = Dimension(100, 35)
-        val start = Button("(re)Start-(重新)启动工作线程")
-        start.size = Dimension(100, 35)
-        panel.add(Box.createVerticalGlue())
-        panel.add(delete)
-        panel.add(Box.createVerticalGlue())
-        panel.add(start)
-        panel.add(Box.createVerticalGlue())
         panel.add(quit)
-        panel.add(Box.createVerticalGlue())
-        delete.addActionListener { }
-        start.addActionListener { }
         quit.addActionListener { end() }
 
         contentPane = panel
@@ -76,7 +63,7 @@ class MyFrame(title: String) : JFrame(title) {
             end()
         }
         menu.add(exit)
-        trayIcon = TrayIcon(img, "数据发送中，请勿退出！", menu)
+        trayIcon = TrayIcon(img, "数据发送中, 请勿退出！", menu)
         SystemTray.getSystemTray().add(trayIcon)
     }
 
@@ -87,12 +74,14 @@ class MyFrame(title: String) : JFrame(title) {
             override fun run() {
                 try {
                     email.postMsg()
-                    val text = "[${ Date().toString("yyyy-MM-dd HH:mm:ss") }]，最新数据发送成功！"
-                    Log.log.info("邮件发送成功！")
+                    val count = ++com.soft.guoni.sendCount
+                    val text = "[${Date().toString("yyyy-MM-dd HH:mm:ss")}], 第 $count 封邮件发送成功!"
+                    Log.log.info("第 $count 封邮件发送成功!")
                     trayIcon.displayMessage("阳光服饰", text, TrayIcon.MessageType.INFO)
                 } catch(e: Exception) {
-                    Log.log.warning("邮件发送错误,${e.stackTrace}")
-                    trayIcon.displayMessage("阳光服饰", "邮件发送失败！", TrayIcon.MessageType.ERROR)
+                    Log.log.warning("第 ${com.soft.guoni.sendCount} 封邮件发送错误,${e.message}")
+                    e.printStackTrace()
+                    trayIcon.displayMessage("阳光服饰", "第 ${com.soft.guoni.sendCount} 封邮件发送失败!", TrayIcon.MessageType.ERROR)
                 }
             }
         }, delay, times)
@@ -101,6 +90,7 @@ class MyFrame(title: String) : JFrame(title) {
     fun end() {
         timer.cancel()
         email.connection.close()
+        log.info("程序结束!")
         exitProcess(0)
     }
 

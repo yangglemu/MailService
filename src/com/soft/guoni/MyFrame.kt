@@ -49,8 +49,10 @@ class MyFrame(title: String) : JFrame(title) {
     }
 
     private fun createTray() {
-        val path = javaClass.getResource("/res/icon.png")
-        val img = toolkit.createImage(path)
+        val path = javaClass.getResource("/res/Flower.png")
+        var image = toolkit.createImage(path)
+        //image = image.getScaledInstance(50, 50, Image.SCALE_DEFAULT)
+        this.iconImage = image
         val menu = PopupMenu()
         val normal = MenuItem("显示")
         normal.addActionListener {
@@ -63,7 +65,8 @@ class MyFrame(title: String) : JFrame(title) {
             end()
         }
         menu.add(exit)
-        trayIcon = TrayIcon(img, "数据发送中, 请勿退出！", menu)
+        trayIcon = TrayIcon(image, "数据发送中, 请勿退出！", menu)
+        trayIcon.isImageAutoSize = true
         SystemTray.getSystemTray().add(trayIcon)
     }
 
@@ -72,16 +75,16 @@ class MyFrame(title: String) : JFrame(title) {
         val times: Long = 30 * 1000 * 60
         timer.schedule(object : java.util.TimerTask() {
             override fun run() {
+                val count = com.soft.guoni.sendCount++
                 try {
                     email.postMsg()
-                    val count = ++com.soft.guoni.sendCount
                     val text = "[${Date().toString("yyyy-MM-dd HH:mm:ss")}], 第 $count 封邮件发送成功!"
-                    Log.log.info("第 $count 封邮件发送成功!")
-                    trayIcon.displayMessage("阳光服饰", text, TrayIcon.MessageType.INFO)
+                    log.info("*第 $count 封邮件发送成功!")
+                    trayIcon.displayMessage("阳光服饰", text, TrayIcon.MessageType.NONE)
                 } catch(e: Exception) {
-                    Log.log.warning("第 ${com.soft.guoni.sendCount} 封邮件发送错误,${e.message}")
+                    log.warning("第 $count 封邮件发送错误,${e.message}")
                     e.printStackTrace()
-                    trayIcon.displayMessage("阳光服饰", "第 ${com.soft.guoni.sendCount} 封邮件发送失败!", TrayIcon.MessageType.ERROR)
+                    trayIcon.displayMessage("阳光服饰", "第 ${com.soft.guoni.sendCount} 封邮件发送失败!", TrayIcon.MessageType.NONE)
                 }
             }
         }, delay, times)
@@ -90,7 +93,7 @@ class MyFrame(title: String) : JFrame(title) {
     fun end() {
         timer.cancel()
         email.connection.close()
-        log.info("程序结束!")
+        log.info("退出邮件自动发送程序!")
         exitProcess(0)
     }
 

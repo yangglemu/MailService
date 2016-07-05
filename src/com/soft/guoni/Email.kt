@@ -34,6 +34,7 @@ class Email(val connection: Connection) {
     }
 
     fun send(content: String) {
+        log.info("start to send...")
         val session = Session.getInstance(Properties())
         val msg = MimeMessage(session)
         msg.setFrom(InternetAddress(mailBox))
@@ -44,6 +45,7 @@ class Email(val connection: Connection) {
         trans.connect(smtpHost, username, password)
         trans.sendMessage(msg, arrayOf(InternetAddress(mailBox)))
         trans.close()
+        log.info("end to send is ok!")
     }
 
     fun postMsg() {
@@ -52,6 +54,7 @@ class Email(val connection: Connection) {
     }
 
     fun deleteOldMessage() {
+        log.info("start to delete old message...")
         val session = Session.getInstance(Properties())
         val store = session.getStore("pop3")
         store.connect(pop3Host, username, password)
@@ -63,20 +66,25 @@ class Email(val connection: Connection) {
             if (msg.subject != "sunshine" || isOldMessage(msg)) {
                 msg.setFlag(Flags.Flag.DELETED, true)
             } else if (msg.sentDate.toString(formatString) == today) {
-
                 array.add(msg)
             }
         }
-        log.info("today's messages count: ${array.size}")
-        if (array.size > 1) {
-            for (index in 0..array.size - 2) {
-                array[index].setFlag(Flags.Flag.DELETED, true)
-                log.info("today's old message on ${array[index].sentDate.toString("yyyy-MM-dd HH:mm:ss")} is deleted!")
+        val size = array.size
+        log.info("today's messages count: $size")
+        when {
+            (size == 0) -> log.info("today has no message!")
+            (size == 1) -> log.info("today only has one message, nothing to do! ")
+            (size > 1) -> {
+                for (index in 0..size - 2) {
+                    array[index].setFlag(Flags.Flag.DELETED, true)
+                    log.info("today's old message on ${array[index].sentDate.toString("yyyy-MM-dd HH:mm:ss")} is deleted!")
+                }
+                log.info("today's new message on ${array[size - 1].sentDate.toString("yyyy-MM-dd HH:mm:ss")} is changed!")
             }
         }
-        log.info("today's new message on ${array[array.size - 1].sentDate.toString("yyyy-MM-dd HH:mm:ss")} is changed!")
         folder.close(true)
         store.close()
+        log.info("end to delete old message is ok!")
     }
 
     fun isOldMessage(msg: Message): Boolean {

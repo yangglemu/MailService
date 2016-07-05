@@ -17,14 +17,19 @@ class Log {
             path += "\\myLog"
             val file = File(path)
             if (!file.exists()) file.mkdir()
-            path = "$path\\MailService${Date().toString("yyyyMMdd")}.log"
+            path = "$path\\MailService${Date().toString("yyyyMM")}.log"
             val fh = FileHandler(path, true)
             fh.level = Level.ALL
             fh.formatter = object : Formatter() {
                 override fun format(record: LogRecord?): String {
                     val r = record!!
-                    val date = Date().toString("yyyy-MM-dd HH:mm:ss")
-                    return date + "  " + r.level.name.substring(0, 4) + ": " + r.message + "\n"
+                    if (r.level == Level.FINE) {
+                        return r.message
+                    } else {
+                        val date = Date().toString("yyyy-MM-dd HH:mm:ss")
+                        val value = date + "  " + r.level.name.substring(0, 4) + ": " + r.message + "\r\n"
+                        return value
+                    }
                 }
             }
             myLog.addHandler(fh)

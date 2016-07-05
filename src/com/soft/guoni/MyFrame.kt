@@ -5,6 +5,7 @@ import java.awt.event.WindowAdapter
 import java.awt.event.WindowEvent
 import java.sql.DriverManager
 import java.util.*
+import javax.swing.Box
 import javax.swing.BoxLayout
 import javax.swing.JFrame
 import javax.swing.JPanel
@@ -26,14 +27,21 @@ class MyFrame(title: String) : JFrame(title) {
 
     init {
         val panel = JPanel()
-        panel.layout = BoxLayout(panel, BoxLayout.Y_AXIS)
-        val quit = Button("Exit-退出程序")
-        quit.size = Dimension(100, 35)
-        panel.add(quit)
+        val bl = BoxLayout(panel, BoxLayout.Y_AXIS)
+        panel.layout = bl
+        val quit = Button("Exit(关闭)")
+        quit.preferredSize = Dimension(90, 35)
         quit.addActionListener { end() }
-
+        val p = JPanel()
+        panel.add(Box.createVerticalStrut(120))
+        p.layout = BoxLayout(p, BoxLayout.X_AXIS)
+        p.add(Box.createHorizontalStrut(180))
+        p.add(quit)
+        p.add(Box.createHorizontalStrut(180))
+        panel.add(p)
+        panel.add(Box.createVerticalStrut(120))
         contentPane = panel
-        size = Dimension(400, 200)
+        size = Dimension(560, 320)
         defaultCloseOperation = JFrame.HIDE_ON_CLOSE
         this.addWindowListener(object : WindowAdapter() {
             override fun windowOpened(e: WindowEvent) {
@@ -51,7 +59,6 @@ class MyFrame(title: String) : JFrame(title) {
     private fun createTray() {
         val path = javaClass.getResource("/res/Flower.png")
         var image = toolkit.createImage(path)
-        //image = image.getScaledInstance(50, 50, Image.SCALE_DEFAULT)
         this.iconImage = image
         val menu = PopupMenu()
         val normal = MenuItem("显示")
@@ -85,6 +92,8 @@ class MyFrame(title: String) : JFrame(title) {
                     log.warning("第 $count 封邮件发送错误,${e.message}")
                     e.printStackTrace()
                     trayIcon.displayMessage("阳光服饰", "第 ${com.soft.guoni.sendCount} 封邮件发送失败!", TrayIcon.MessageType.NONE)
+                } finally {
+                    log.fine("\r\n")
                 }
             }
         }, delay, times)

@@ -23,12 +23,13 @@ class Log {
             fh.formatter = object : Formatter() {
                 override fun format(record: LogRecord?): String {
                     val r = record!!
-                    if (r.level == Level.FINE) {
-                        return r.message
-                    } else {
-                        val date = Date().toString("yyyy-MM-dd HH:mm:ss")
-                        val value = date + "  " + r.level.name.substring(0, 4) + ": " + r.message + "\r\n"
-                        return value
+                    when (r.level) {
+                        Level.FINE -> return r.message
+                        else -> {
+                            val date = Date().toString("yyyy-MM-dd HH:mm:ss")
+                            val value = date + "  " + r.level.name.substring(0, 4) + ": " + r.message + "\r\n"
+                            return value
+                        }
                     }
                 }
             }

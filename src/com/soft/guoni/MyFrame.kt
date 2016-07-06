@@ -3,6 +3,8 @@ package com.soft.guoni
 import java.awt.*
 import java.awt.event.WindowAdapter
 import java.awt.event.WindowEvent
+import java.io.PrintWriter
+import java.io.StringWriter
 import java.sql.DriverManager
 import java.util.*
 import javax.swing.Box
@@ -90,8 +92,11 @@ class MyFrame(title: String) : JFrame(title) {
                     trayIcon.displayMessage("阳光服饰", text, TrayIcon.MessageType.NONE)
                 } catch(e: Exception) {
                     log.warning("第 $count 封邮件发送错误,${e.message}")
-                    e.printStackTrace()
-                    trayIcon.displayMessage("阳光服饰", "第 ${com.soft.guoni.sendCount} 封邮件发送失败!", TrayIcon.MessageType.NONE)
+                    val sw = StringWriter()
+                    val pw = PrintWriter(sw)
+                    e.printStackTrace(pw)
+                    log.warning("${sw.toString()}")
+                    trayIcon.displayMessage("阳光服饰", "第 $count 封邮件发送失败!", TrayIcon.MessageType.ERROR)
                 } finally {
                     log.fine("\r\n")
                 }

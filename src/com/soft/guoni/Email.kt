@@ -35,15 +35,18 @@ class Email(val connection: Connection) {
 
     fun send(content: String) {
         log.info("start to send...")
+        log.info("the message size is: ${content.length}")
         val session = Session.getInstance(Properties())
+        session.debug = true
         val msg = MimeMessage(session)
         msg.setFrom(InternetAddress(mailBox))
+        msg.setRecipients(Message.RecipientType.TO, mailBox)
         msg.subject = subject
         msg.sentDate = Date()
         msg.setText(content)
         val trans = session.getTransport("smtp")
         trans.connect(smtpHost, username, password)
-        trans.sendMessage(msg, arrayOf(InternetAddress(mailBox)))
+        trans.sendMessage(msg, msg.allRecipients)
         trans.close()
         log.info("end to send is ok!")
     }

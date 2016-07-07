@@ -6,11 +6,10 @@ import java.awt.event.WindowEvent
 import java.io.PrintWriter
 import java.io.StringWriter
 import java.sql.DriverManager
+import java.text.SimpleDateFormat
 import java.util.*
-import javax.swing.Box
-import javax.swing.BoxLayout
-import javax.swing.JFrame
-import javax.swing.JPanel
+import java.util.Timer
+import javax.swing.*
 import kotlin.system.exitProcess
 
 /**
@@ -18,7 +17,7 @@ import kotlin.system.exitProcess
  */
 
 class MyFrame(title: String) : JFrame(title) {
-    var timer: Timer = Timer()
+    var timer: Timer = Timer("myTimer_Main")
     val email: Email by lazy { Email(DriverManager.getConnection(url)) }
 
     lateinit var trayIcon: TrayIcon
@@ -31,11 +30,34 @@ class MyFrame(title: String) : JFrame(title) {
         val panel = JPanel()
         val bl = BoxLayout(panel, BoxLayout.Y_AXIS)
         panel.layout = bl
-        val quit = Button("Exit(关闭)")
-        quit.preferredSize = Dimension(90, 35)
+        val send = Button("Send—选择日期")
+        send.addActionListener {
+            val timer = Timer("myTimer_Temp")
+            timer.schedule(object : java.util.TimerTask() {
+                override fun run() {
+                    val sql = JOptionPane.showInputDialog(this@MyFrame, "日期格式: 2000-01-01")
+                    try {
+                        val formatter = SimpleDateFormat("yyyy-MM-dd")
+                        val date = formatter.parse(sql)
+                        email.postMsg(date)
+                    } catch (e: Exception) {
+                        JOptionPane.showMessageDialog(this@MyFrame, "选择日期发送出错，检查输入格式！")
+                        log.warning(e.message)
+                    }
+                }
+            }, 0)
+        }
+        val quit = Button("Exit—退出程序")
         quit.addActionListener { end() }
-        val p = JPanel()
+        val p1 = JPanel()
         panel.add(Box.createVerticalStrut(120))
+        p1.layout = BoxLayout(p1, BoxLayout.X_AXIS)
+        p1.add(Box.createHorizontalStrut(180))
+        p1.add(send)
+        p1.add(Box.createHorizontalStrut(180))
+        panel.add(p1)
+        val p = JPanel()
+        panel.add(Box.createVerticalStrut(60))
         p.layout = BoxLayout(p, BoxLayout.X_AXIS)
         p.add(Box.createHorizontalStrut(180))
         p.add(quit)
@@ -43,7 +65,7 @@ class MyFrame(title: String) : JFrame(title) {
         panel.add(p)
         panel.add(Box.createVerticalStrut(120))
         contentPane = panel
-        size = Dimension(560, 320)
+        size = Dimension(560, 420)
         defaultCloseOperation = JFrame.HIDE_ON_CLOSE
         this.addWindowListener(object : WindowAdapter() {
             override fun windowOpened(e: WindowEvent) {

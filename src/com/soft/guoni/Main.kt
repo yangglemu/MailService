@@ -1,5 +1,7 @@
 package com.soft.guoni
 
+import java.text.SimpleDateFormat
+import java.util.*
 import javax.swing.SwingUtilities
 import javax.swing.UIManager
 import javax.swing.plaf.nimbus.NimbusLookAndFeel
@@ -16,4 +18,8 @@ fun main(args: Array<String>) {
     val f = MyFrame("定时发送数据")
     f.isVisible = true
     SwingUtilities.invokeLater { f.isVisible = false }
+}
+
+fun Date.toString(formatString: String): String {
+    return SimpleDateFormat(formatString).format(this)
 }

@@ -12,5 +12,6 @@
     <orderEntry type="library" name="mysql-connector-java-5.1.37-bin" level="project" />
     <orderEntry type="library" name="kotlin-reflect" level="project" />
     <orderEntry type="library" name="kotlin-runtime-sources" level="project" />
+    <orderEntry type="library" name="datepicker" level="project" />
   </component>
 </module>

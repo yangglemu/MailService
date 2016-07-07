@@ -13,14 +13,7 @@ class Log {
         val log: Logger by lazy {
             val myLog = Logger.getLogger("myLog")
             myLog.level = Level.ALL
-            var path = System.getProperty("user.dir")
-            path += "\\myLog"
-            val file = File(path)
-            if (!file.exists()) file.mkdir()
-            path = "$path\\MailService${Date().toString("yyyyMM")}.log"
-            val fh = FileHandler(path, true)
-            fh.level = Level.ALL
-            fh.formatter = object : Formatter() {
+            val formatter = object : Formatter() {
                 override fun format(record: LogRecord?): String {
                     val r = record!!
                     when (r.level) {
@@ -33,7 +26,19 @@ class Log {
                     }
                 }
             }
+            var path = System.getProperty("user.dir")
+            path += "\\myLog"
+            val file = File(path)
+            if (!file.exists()) file.mkdir()
+            path = "$path\\MailService${Date().toString("yyyyMM")}.log"
+            val fh = FileHandler(path, true)
+            fh.level = Level.ALL
+            fh.formatter = formatter
             myLog.addHandler(fh)
+            val ch = ConsoleHandler()
+            ch.level = Level.ALL
+            ch.formatter = formatter
+            myLog.addHandler(ch)
             myLog
         }
     }

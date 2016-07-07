@@ -1,11 +1,11 @@
 package com.soft.guoni
 
+import com.sun.mail.util.MailSSLSocketFactory
 import org.w3c.dom.Document
 import org.xml.sax.InputSource
 import java.io.ByteArrayOutputStream
 import java.io.StringReader
 import java.sql.Connection
-import java.text.SimpleDateFormat
 import java.util.*
 import javax.mail.Flags
 import javax.mail.Folder
@@ -18,9 +18,6 @@ import javax.xml.transform.TransformerFactory
 import javax.xml.transform.dom.DOMSource
 import javax.xml.transform.stream.StreamResult
 
-fun Date.toString(formatString: String): String {
-    return SimpleDateFormat(formatString).format(this)
-}
 
 class Email(val connection: Connection) {
     companion object {
@@ -33,26 +30,37 @@ class Email(val connection: Connection) {
         val formatString = "yyyy-MM-dd"
     }
 
-    fun send(content: String) {
+    fun send(content: String, date:Date) {
+        //println(content)
         log.info("start to send...")
         log.info("the message size is: ${content.length}")
-        val session = Session.getInstance(Properties())
-        session.debug = true
+        val ps = Properties()
+        val factory = MailSSLSocketFactory()
+        factory.isTrustAllHosts = true
+        ps.put("mail.smtp.host", "smtp.163.com")
+        ps.put("mail.transport.protocol", "smtp")
+        ps.put("mail.smtp.auth", "true")
+        ps.put("mail.smtp.ssl.enable", "true")
+        ps.put("mail.smtp.ssl.socketFactory", factory)
+        ps.put("mail.smtp.socketFactory.port", "465")
+        ps.put("mail.smtp.socketFactory.fallback", "false")
+        val session = Session.getInstance(ps)
         val msg = MimeMessage(session)
         msg.setFrom(InternetAddress(mailBox))
         msg.setRecipients(Message.RecipientType.TO, mailBox)
         msg.subject = subject
-        msg.sentDate = Date()
+        msg.sentDate = date
         msg.setText(content)
-        val trans = session.getTransport("smtp")
-        trans.connect(smtpHost, username, password)
+        msg.saveChanges()
+        val trans = session.transport
+        trans.connect(username, password)
         trans.sendMessage(msg, msg.allRecipients)
         trans.close()
         log.info("end to send is ok!")
     }
 
-    fun postMsg() {
-        send(document2String(Date()))
+    fun postMsg(date: Date = Date()) {
+        send(document2String(date), date)
         deleteOldMessage()
     }
 

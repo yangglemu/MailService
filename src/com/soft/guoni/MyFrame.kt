@@ -19,7 +19,7 @@ import kotlin.system.exitProcess
 class MyFrame(title: String) : JFrame(title) {
     var timer: Timer = Timer("myTimer_Main")
     val email: Email by lazy { Email(DriverManager.getConnection(url)) }
-
+    val textArea = TextArea()
     lateinit var trayIcon: TrayIcon
 
     companion object {
@@ -30,18 +30,30 @@ class MyFrame(title: String) : JFrame(title) {
         val panel = JPanel()
         val bl = BoxLayout(panel, BoxLayout.Y_AXIS)
         panel.layout = bl
-        val send = Button("Send—选择日期")
+        val content = Button("Content—获取发送内容")
+        content.addActionListener {
+            val sql = JOptionPane.showInputDialog(this@MyFrame, "日期格式: 2016-07-01")
+            try {
+                val formatter = SimpleDateFormat("yyyy-MM-dd")
+                val date = formatter.parse(sql)
+                textArea.text = email.document2String(date)
+            } catch (e: Exception) {
+                JOptionPane.showMessageDialog(this@MyFrame, "输入格式,或者其它错误!")
+                log.warning(e.message)
+            }
+        }
+        val send = Button("Send—选择日期发送")
         send.addActionListener {
             val timer = Timer("myTimer_Temp")
             timer.schedule(object : java.util.TimerTask() {
                 override fun run() {
-                    val sql = JOptionPane.showInputDialog(this@MyFrame, "日期格式: 2000-01-01")
+                    val sql = JOptionPane.showInputDialog(this@MyFrame, "日期格式: 2016-07-01")
                     try {
                         val formatter = SimpleDateFormat("yyyy-MM-dd")
                         val date = formatter.parse(sql)
                         email.postMsg(date)
                     } catch (e: Exception) {
-                        JOptionPane.showMessageDialog(this@MyFrame, "选择日期发送出错，检查输入格式！")
+                        JOptionPane.showMessageDialog(this@MyFrame, "输入格式,或者其它错误!")
                         log.warning(e.message)
                     }
                 }
@@ -49,24 +61,34 @@ class MyFrame(title: String) : JFrame(title) {
         }
         val quit = Button("Exit—退出程序")
         quit.addActionListener { end() }
+        panel.add(textArea)
+
+        val p0 = JPanel()
+        panel.add(Box.createVerticalStrut(20))
+        p0.layout = BoxLayout(p0, BoxLayout.X_AXIS)
+        p0.add(Box.createHorizontalStrut(180))
+        p0.add(content)
+        p0.add(Box.createHorizontalStrut(180))
+        panel.add(p0)
+
         val p1 = JPanel()
-        panel.add(Box.createVerticalStrut(120))
+        panel.add(Box.createVerticalStrut(20))
         p1.layout = BoxLayout(p1, BoxLayout.X_AXIS)
         p1.add(Box.createHorizontalStrut(180))
         p1.add(send)
         p1.add(Box.createHorizontalStrut(180))
         panel.add(p1)
         val p = JPanel()
-        panel.add(Box.createVerticalStrut(60))
+        panel.add(Box.createVerticalStrut(20))
         p.layout = BoxLayout(p, BoxLayout.X_AXIS)
         p.add(Box.createHorizontalStrut(180))
         p.add(quit)
         p.add(Box.createHorizontalStrut(180))
         panel.add(p)
-        panel.add(Box.createVerticalStrut(120))
+        panel.add(Box.createVerticalStrut(20))
         contentPane = panel
-        size = Dimension(560, 420)
-        defaultCloseOperation = JFrame.HIDE_ON_CLOSE
+        size = Dimension(600, 420)
+        defaultCloseOperation = HIDE_ON_CLOSE
         this.addWindowListener(object : WindowAdapter() {
             override fun windowOpened(e: WindowEvent) {
                 setLocationRelativeTo(null)
@@ -102,8 +124,8 @@ class MyFrame(title: String) : JFrame(title) {
     }
 
     fun start() {
-        val delay: Long = 0
-        val times: Long = 30 * 1000 * 60
+        val delay: Long = 5000
+        val times: Long = 30 * 1000 * 60    //  半小时
         timer.schedule(object : java.util.TimerTask() {
             override fun run() {
                 val count = com.soft.guoni.sendCount++

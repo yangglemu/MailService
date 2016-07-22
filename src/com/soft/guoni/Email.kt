@@ -4,7 +4,9 @@ import com.sun.mail.util.MailSSLSocketFactory
 import org.w3c.dom.Document
 import org.xml.sax.InputSource
 import java.io.ByteArrayOutputStream
+import java.io.PrintWriter
 import java.io.StringReader
+import java.io.StringWriter
 import java.sql.Connection
 import java.util.*
 import javax.mail.Flags
@@ -21,23 +23,25 @@ import javax.xml.transform.stream.StreamResult
 
 class Email(val connection: Connection) {
     companion object {
-        val smtpHost = "smtp.163.com"
+        val smtpHost = "smtp.qq.com"
         val pop3Host = "pop.163.com"
-        val username = "yangglemu"
-        val password = "yuanbo132"
-        val mailBox = "yangglemu@163.com"
+        val usernameSmtp = "13277481910@qq.com"
+        val usernamePop = "yangglemu@163.com"
+        val passwordSmtp = "gssqrygvdkdddaaf"
+        val passwordPop3="yuanbo132"
+        val mailBoxPop3 = "yangglemu@163.com"
+        val mailBoxSmtp="13277481910@qq.com"
         val subject = "sunshine"
         val formatString = "yyyy-MM-dd"
     }
 
-    fun send(content: String, date:Date) {
-        //println(content)
+    fun send(content: String, date: Date) {
         log.info("start to send...")
         log.info("the message size is: ${content.length}")
         val ps = Properties()
         val factory = MailSSLSocketFactory()
         factory.isTrustAllHosts = true
-        ps.put("mail.smtp.host", "smtp.163.com")
+        ps.put("mail.smtp.host", smtpHost)
         ps.put("mail.transport.protocol", "smtp")
         ps.put("mail.smtp.auth", "true")
         ps.put("mail.smtp.ssl.enable", "true")
@@ -46,16 +50,25 @@ class Email(val connection: Connection) {
         ps.put("mail.smtp.socketFactory.fallback", "false")
         val session = Session.getInstance(ps)
         val msg = MimeMessage(session)
-        msg.setFrom(InternetAddress(mailBox))
-        msg.setRecipients(Message.RecipientType.TO, mailBox)
+        msg.setFrom(InternetAddress(mailBoxSmtp))
+        msg.setRecipients(Message.RecipientType.TO, mailBoxPop3)
         msg.subject = subject
         msg.sentDate = date
         msg.setText(content)
         msg.saveChanges()
         val trans = session.transport
-        trans.connect(username, password)
-        trans.sendMessage(msg, msg.allRecipients)
-        trans.close()
+        trans.connect(usernameSmtp, passwordSmtp)
+        try {
+            trans.sendMessage(msg, msg.allRecipients)
+        } catch (e: Exception) {
+            val sw = StringWriter()
+            val pw = PrintWriter(sw)
+            e.printStackTrace(pw)
+            log.warning(sw.toString())
+            throw Exception(sw.toString())
+        } finally {
+            trans.close()
+        }
         log.info("end to send is ok!")
     }
 
@@ -68,7 +81,7 @@ class Email(val connection: Connection) {
         log.info("start to delete old message...")
         val session = Session.getInstance(Properties())
         val store = session.getStore("pop3")
-        store.connect(pop3Host, username, password)
+        store.connect(pop3Host, usernamePop, passwordPop3)
         val folder = store.getFolder("INBOX")
         folder.open(Folder.READ_WRITE)
         val today = Date().toString(formatString)

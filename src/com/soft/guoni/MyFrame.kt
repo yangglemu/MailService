@@ -124,7 +124,7 @@ class MyFrame(title: String) : JFrame(title) {
     }
 
     fun start() {
-        val delay: Long = 5000
+        val delay: Long = 1000
         val times: Long = 30 * 1000 * 60    //  半小时
         timer.schedule(object : java.util.TimerTask() {
             override fun run() {

@@ -26,10 +26,13 @@ class Email(val connection: Connection) {
         val smtpHost = "smtp.163.com"
         val pop3Host = "pop.163.com"
         //val usernameSmtp = "13277481910@qq.com"
+        val usernameSmtp = "yangglemu131@163.com"
+        val passwordSmtp = "yuanbo132"
         val usernamePop = "yangglemu@163.com"
         //val passwordSmtp = "gssqrygvdkdddaaf"
         val passwordPop3 = "yuanbo132"
         val mailBoxPop3 = "yangglemu@163.com"
+        val mailBoxSmtp = "yangglemu131@163.com"
         //val mailBoxSmtp = "13277481910@qq.com"
         val subject = "sunshine"
         val formatString = "yyyy-MM-dd"
@@ -48,19 +51,19 @@ class Email(val connection: Connection) {
         //ps.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory")
         // ps.put("mail.smtp.ssl.socketFactory", factory)
         //ps.put("mail.smtp.socketFactory.port", "465")
-        ps.put("mail.smtp.port","25")
+        ps.put("mail.smtp.port", "25")
         //ps.put("mail.smtp.socketFactory.fallback", "false")
         val session = Session.getInstance(ps)
-        session.debug = true
+        //session.debug = true
         val msg = MimeMessage(session)
-        msg.setFrom(InternetAddress(mailBoxPop3))
+        msg.setFrom(InternetAddress(mailBoxSmtp))
         msg.setRecipients(Message.RecipientType.TO, mailBoxPop3)
         msg.subject = subject
         msg.sentDate = date
         msg.setText(content)
         msg.saveChanges()
         val trans = session.transport
-        trans.connect(usernamePop, passwordPop3)
+        trans.connect(usernameSmtp, passwordSmtp)
         try {
             trans.sendMessage(msg, msg.allRecipients)
         } catch (e: Exception) {
@@ -77,7 +80,13 @@ class Email(val connection: Connection) {
 
     fun postMsg(date: Date = Date()) {
         send(document2String(date), date)
-        deleteOldMessage()
+        //deleteOldMessage()
+        val timer = Timer("deleteMessage")
+        timer.schedule(object : TimerTask() {
+            override fun run() {
+                deleteOldMessage()
+            }
+        }, 3000)
     }
 
     fun deleteOldMessage() {

@@ -23,14 +23,14 @@ import javax.xml.transform.stream.StreamResult
 
 class Email(val connection: Connection) {
     companion object {
-        val smtpHost = "smtp.qq.com"
+        val smtpHost = "smtp.163.com"
         val pop3Host = "pop.163.com"
-        val usernameSmtp = "13277481910@qq.com"
+        //val usernameSmtp = "13277481910@qq.com"
         val usernamePop = "yangglemu@163.com"
-        val passwordSmtp = "gssqrygvdkdddaaf"
-        val passwordPop3="yuanbo132"
+        //val passwordSmtp = "gssqrygvdkdddaaf"
+        val passwordPop3 = "yuanbo132"
         val mailBoxPop3 = "yangglemu@163.com"
-        val mailBoxSmtp="13277481910@qq.com"
+        //val mailBoxSmtp = "13277481910@qq.com"
         val subject = "sunshine"
         val formatString = "yyyy-MM-dd"
     }
@@ -39,25 +39,28 @@ class Email(val connection: Connection) {
         log.info("start to send...")
         log.info("the message size is: ${content.length}")
         val ps = Properties()
-        val factory = MailSSLSocketFactory()
-        factory.isTrustAllHosts = true
+        //val factory = MailSSLSocketFactory()
+        //factory.isTrustAllHosts = true
         ps.put("mail.smtp.host", smtpHost)
-        ps.put("mail.transport.protocol", "smtp")
+        //ps.put("mail.transport.protocol", "smtp")
         ps.put("mail.smtp.auth", "true")
-        ps.put("mail.smtp.ssl.enable", "true")
-        ps.put("mail.smtp.ssl.socketFactory", factory)
-        ps.put("mail.smtp.socketFactory.port", "465")
-        ps.put("mail.smtp.socketFactory.fallback", "false")
+        //ps.put("mail.smtp.ssl.enable", "true")
+        //ps.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory")
+        // ps.put("mail.smtp.ssl.socketFactory", factory)
+        //ps.put("mail.smtp.socketFactory.port", "465")
+        ps.put("mail.smtp.port","25")
+        //ps.put("mail.smtp.socketFactory.fallback", "false")
         val session = Session.getInstance(ps)
+        session.debug = true
         val msg = MimeMessage(session)
-        msg.setFrom(InternetAddress(mailBoxSmtp))
+        msg.setFrom(InternetAddress(mailBoxPop3))
         msg.setRecipients(Message.RecipientType.TO, mailBoxPop3)
         msg.subject = subject
         msg.sentDate = date
         msg.setText(content)
         msg.saveChanges()
         val trans = session.transport
-        trans.connect(usernameSmtp, passwordSmtp)
+        trans.connect(usernamePop, passwordPop3)
         try {
             trans.sendMessage(msg, msg.allRecipients)
         } catch (e: Exception) {

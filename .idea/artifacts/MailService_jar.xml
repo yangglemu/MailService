@@ -6,7 +6,6 @@
       <element id="extracted-dir" path="$PROJECT_DIR$/libs/kotlin-runtime.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$PROJECT_DIR$/libs/mysql-connector-java-5.1.37-bin.jar" path-in-jar="/" />
       <element id="library" level="project" name="kotlin-runtime-sources" />
-      <element id="extracted-dir" path="$PROJECT_DIR$/libs/mail.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$PROJECT_DIR$/libs/kotlin-reflect.jar" path-in-jar="/" />
     </root>
   </artifact>

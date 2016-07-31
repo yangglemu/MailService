@@ -121,13 +121,14 @@ class Email(val connection: Connection) {
         folder.close(true)
         store.close()
         log.info("end to delete old message is ok!")
+        log.fine("\r\n")
     }
 
     fun isOldMessage(msg: Message): Boolean {
         var isOld = false
         val now = Date().time
         val start = msg.sentDate.time
-        val diff = 1000L * 60 * 60 * 24 * 30
+        val diff = 1000L * 60 * 60 * 24 * 10
         if (now - start > diff) isOld = true
         return isOld
     }

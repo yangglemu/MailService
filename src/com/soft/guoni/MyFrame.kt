@@ -142,7 +142,7 @@ class MyFrame(title: String) : JFrame(title) {
                     log.warning("${sw.toString()}")
                     trayIcon.displayMessage("阳光服饰", "第 $count 封邮件发送失败!", TrayIcon.MessageType.ERROR)
                 } finally {
-                    log.fine("\r\n")
+                    //log.fine("\r\n")
                 }
             }
         }, delay, times)

@@ -7,10 +7,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="aaf748b0-bf45-4257-9fc9-bf307bbba72f" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/config.xml" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/artifacts/MailService_jar.xml" afterPath="$PROJECT_DIR$/.idea/artifacts/MailService_jar.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/myLog/MailService201607.log" afterPath="$PROJECT_DIR$/myLog/MailService201607.log" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/soft/guoni/Email.kt" afterPath="$PROJECT_DIR$/src/com/soft/guoni/Email.kt" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/soft/guoni/MyFrame.kt" afterPath="$PROJECT_DIR$/src/com/soft/guoni/MyFrame.kt" />
     </list>
@@ -37,11 +34,31 @@
       <file leaf-file-name="Email.kt" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/com/soft/guoni/Email.kt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="950">
-              <caret line="104" column="30" selection-start-line="104" selection-start-column="30" selection-end-line="104" selection-end-column="30" />
+            <state relative-caret-position="86">
+              <caret line="138" column="89" selection-start-line="138" selection-start-column="89" selection-end-line="138" selection-end-column="89" />
               <folding>
-                <marker date="1469932588916" expanded="true" signature="5498:5550" ph="select sj as... goods" />
+                <marker date="1470202554210" expanded="true" signature="5509:5561" ph="select sj as... goods" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Main.kt" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/soft/guoni/Main.kt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="285">
+              <caret line="19" column="54" selection-start-line="19" selection-start-column="54" selection-end-line="19" selection-end-column="54" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="MyFrame.kt" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/soft/guoni/MyFrame.kt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="428">
+              <caret line="106" column="59" selection-start-line="106" selection-start-column="59" selection-end-line="106" selection-end-column="59" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -106,7 +123,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
+      <pane id="Scope" />
       <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
@@ -178,7 +195,7 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -665,6 +682,10 @@
       <workItem from="1469852208903" duration="800000" />
       <workItem from="1469857362920" duration="275000" />
       <workItem from="1469932162589" duration="750000" />
+      <workItem from="1470027096971" duration="2111000" />
+      <workItem from="1470029606090" duration="241000" />
+      <workItem from="1470030086358" duration="638000" />
+      <workItem from="1470202223934" duration="994000" />
     </task>
     <task id="LOCAL-00001" summary="by yangglemu">
       <created>1467777400708</created>
@@ -698,7 +719,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="32682000" />
+    <option name="totallyTimeSpent" value="36666000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1924" height="1066" extended-state="0" />
@@ -711,8 +732,8 @@
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32939914" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32939914" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -764,10 +785,98 @@
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/src/com/soft/guoni/Email.kt">
       <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2337">
+          <caret line="123" column="24" selection-start-line="123" selection-start-column="24" selection-end-line="123" selection-end-column="24" />
+          <folding>
+            <marker date="1470202554210" expanded="true" signature="5509:5561" ph="select sj as... goods" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/soft/guoni/Main.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="361">
+          <caret line="19" column="54" selection-start-line="19" selection-start-column="54" selection-end-line="19" selection-end-column="54" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/soft/guoni/MyFrame.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/soft/guoni/Email.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <marker date="1470202554210" expanded="true" signature="5509:5561" ph="select sj as... goods" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/soft/guoni/Main.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="285">
+          <caret line="19" column="54" selection-start-line="19" selection-start-column="54" selection-end-line="19" selection-end-column="54" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/soft/guoni/MyFrame.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1748">
+          <caret line="102" column="51" selection-start-line="102" selection-start-column="51" selection-end-line="102" selection-end-column="51" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/soft/guoni/Email.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <marker date="1470202554210" expanded="true" signature="5509:5561" ph="select sj as... goods" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/soft/guoni/Main.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="285">
+          <caret line="19" column="54" selection-start-line="19" selection-start-column="54" selection-end-line="19" selection-end-column="54" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/soft/guoni/MyFrame.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2736">
+          <caret line="154" column="84" selection-start-line="154" selection-start-column="84" selection-end-line="154" selection-end-column="84" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/soft/guoni/Email.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <marker date="1470202554210" expanded="true" signature="5509:5561" ph="select sj as... goods" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/soft/guoni/Email.kt">
+      <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1349">
           <caret line="71" column="33" selection-start-line="71" selection-start-column="33" selection-end-line="71" selection-end-column="33" />
           <folding>
-            <marker date="1469932588916" expanded="true" signature="5498:5550" ph="select sj as... goods" />
+            <marker date="1470202554210" expanded="true" signature="5509:5561" ph="select sj as... goods" />
           </folding>
         </state>
       </provider>
@@ -777,7 +886,7 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <marker date="1469932588916" expanded="true" signature="5498:5550" ph="select sj as... goods" />
+            <marker date="1470202554210" expanded="true" signature="5509:5561" ph="select sj as... goods" />
           </folding>
         </state>
       </provider>
@@ -802,7 +911,7 @@
         <state relative-caret-position="3534">
           <caret line="186" column="44" selection-start-line="186" selection-start-column="44" selection-end-line="186" selection-end-column="44" />
           <folding>
-            <marker date="1469932588916" expanded="true" signature="5498:5550" ph="select sj as... goods" />
+            <marker date="1470202554210" expanded="true" signature="5509:5561" ph="select sj as... goods" />
           </folding>
         </state>
       </provider>
@@ -961,13 +1070,6 @@
     <entry file="file://$PROJECT_DIR$/src/config.xml" />
     <entry file="jar://$PROJECT_DIR$/libs/mail.jar!/com/sun/mail/smtp/SMTPTransport.class" />
     <entry file="file://$PROJECT_DIR$/out/artifacts/myLog/MailService201607.log" />
-    <entry file="file://$PROJECT_DIR$/src/com/soft/guoni/Main.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="437">
-          <caret line="23" column="54" selection-start-line="23" selection-start-column="54" selection-end-line="23" selection-end-column="54" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/myLog/MailService201607.log">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="387">
@@ -975,28 +1077,35 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/soft/guoni/Main.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="285">
+          <caret line="19" column="54" selection-start-line="19" selection-start-column="54" selection-end-line="19" selection-end-column="54" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/com/soft/guoni/Log.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="390">
+        <state relative-caret-position="399">
           <caret line="24" column="25" selection-start-line="24" selection-start-column="25" selection-end-line="24" selection-end-column="25" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/soft/guoni/MyFrame.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="542">
-          <caret line="144" column="38" selection-start-line="144" selection-start-column="38" selection-end-line="144" selection-end-column="38" />
+        <state relative-caret-position="428">
+          <caret line="106" column="59" selection-start-line="106" selection-start-column="59" selection-end-line="106" selection-end-column="59" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/soft/guoni/Email.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="950">
-          <caret line="104" column="30" selection-start-line="104" selection-start-column="30" selection-end-line="104" selection-end-column="30" />
+        <state relative-caret-position="86">
+          <caret line="138" column="89" selection-start-line="138" selection-start-column="89" selection-end-line="138" selection-end-column="89" />
           <folding>
-            <marker date="1469932588916" expanded="true" signature="5498:5550" ph="select sj as... goods" />
+            <marker date="1470202554210" expanded="true" signature="5509:5561" ph="select sj as... goods" />
           </folding>
         </state>
       </provider>

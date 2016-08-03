@@ -92,6 +92,26 @@ class MyFrame(title: String) : JFrame(title) {
         this.addWindowListener(object : WindowAdapter() {
             override fun windowOpened(e: WindowEvent) {
                 setLocationRelativeTo(null)
+                val calendar = Calendar.getInstance(Locale.CHINA)
+                val date = Date()
+                calendar.time = date
+                calendar.add(Calendar.DAY_OF_MONTH, -1)
+                var sDate = calendar.time.toString("yyyy-MM-dd")
+                sDate += " 23:59:59"
+                val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+                try {
+                    email.postMsg(sdf.parse(sDate))
+                    log.info("第 0 封邮件发送成功!")
+                    trayIcon.displayMessage("阳光服饰", "第 0 封邮件发送成功!", TrayIcon.MessageType.NONE)
+                } catch (e: Exception) {
+                    log.warning("第 0 封邮件发送错误,${e.message}")
+                    val sw = StringWriter()
+                    val pw = PrintWriter(sw)
+                    e.printStackTrace(pw)
+                    log.warning("${sw.toString()}")
+                    pw.close()
+                    trayIcon.displayMessage("阳光服饰", "第 0 封邮件发送失败!", TrayIcon.MessageType.ERROR)
+                }
                 start()
             }
 
@@ -104,7 +124,7 @@ class MyFrame(title: String) : JFrame(title) {
 
     private fun createTray() {
         val path = javaClass.getResource("/res/Flower.png")
-        var image = toolkit.createImage(path)
+        val image = toolkit.createImage(path)
         this.iconImage = image
         val menu = PopupMenu()
         val normal = MenuItem("显示")
@@ -124,14 +144,15 @@ class MyFrame(title: String) : JFrame(title) {
     }
 
     fun start() {
-        val delay: Long = 1000
-        val times: Long = 30 * 1000 * 60    //  半小时
+        val delay: Long = 30L * 1000L        //  半分钟
+        val times: Long = 30L * 1000 * 60    //  半小时
         timer.schedule(object : java.util.TimerTask() {
             override fun run() {
                 val count = com.soft.guoni.sendCount++
                 try {
-                    email.postMsg()
-                    val text = "[${Date().toString("yyyy-MM-dd HH:mm:ss")}], 第 $count 封邮件发送成功!"
+                    val date = Date()
+                    email.postMsg(date)
+                    val text = "[${date.toString("yyyy-MM-dd HH:mm:ss")}], 第 $count 封邮件发送成功!"
                     log.info("*第 $count 封邮件发送成功!")
                     trayIcon.displayMessage("阳光服饰", text, TrayIcon.MessageType.NONE)
                 } catch(e: Exception) {
@@ -140,9 +161,10 @@ class MyFrame(title: String) : JFrame(title) {
                     val pw = PrintWriter(sw)
                     e.printStackTrace(pw)
                     log.warning("${sw.toString()}")
+                    pw.close()
                     trayIcon.displayMessage("阳光服饰", "第 $count 封邮件发送失败!", TrayIcon.MessageType.ERROR)
                 } finally {
-                    //log.fine("\r\n")
+
                 }
             }
         }, delay, times)

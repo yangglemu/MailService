@@ -84,19 +84,19 @@ class Email(val connection: Connection) {
         val timer = Timer("deleteMessage")
         timer.schedule(object : TimerTask() {
             override fun run() {
-                deleteOldMessage()
+                deleteOldMessage(date)
             }
-        }, 3000)
+        }, 7000)
     }
 
-    fun deleteOldMessage() {
+    fun deleteOldMessage(date: Date) {
         log.info("start to delete old message...")
         val session = Session.getInstance(Properties())
         val store = session.getStore("pop3")
         store.connect(pop3Host, usernamePop, passwordPop3)
         val folder = store.getFolder("INBOX")
         folder.open(Folder.READ_WRITE)
-        val today = Date().toString(formatString)
+        val today = date.toString(formatString)
         val array = ArrayList<Message>()
         for (msg in folder.messages) {
             if (msg.subject != "sunshine" || isOldMessage(msg)) {
@@ -128,7 +128,7 @@ class Email(val connection: Connection) {
         var isOld = false
         val now = Date().time
         val start = msg.sentDate.time
-        val diff = 1000L * 60 * 60 * 24 * 10
+        val diff = 1000L * 60 * 60 * 24 * 7
         if (now - start > diff) isOld = true
         return isOld
     }

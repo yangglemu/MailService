@@ -9,10 +9,7 @@ import java.io.StringReader
 import java.io.StringWriter
 import java.sql.Connection
 import java.util.*
-import javax.mail.Flags
-import javax.mail.Folder
-import javax.mail.Message
-import javax.mail.Session
+import javax.mail.*
 import javax.mail.internet.InternetAddress
 import javax.mail.internet.MimeMessage
 import javax.xml.parsers.DocumentBuilderFactory
@@ -26,30 +23,72 @@ class Email(val connection: Connection) {
         val smtpHost = "smtp.163.com"
         val pop3Host = "pop.163.com"
         //val usernameSmtp = "13277481910@qq.com"
-        val usernameSmtp = "yangglemu131@163.com"
+        val usernameSmtp = "yangglemu@163.com"
         val passwordSmtp = "yuanbo132"
         val usernamePop = "yangglemu@163.com"
         //val passwordSmtp = "gssqrygvdkdddaaf"
         val passwordPop3 = "yuanbo132"
         val mailBoxPop3 = "yangglemu@163.com"
-        val mailBoxSmtp = "yangglemu131@163.com"
+        val mailBoxSmtp = "yangglemu@163.com"
         //val mailBoxSmtp = "13277481910@qq.com"
         val subject = "sunshine"
         val formatString = "yyyy-MM-dd"
     }
 
-    fun send(content: String, date: Date) {
-        log.info("start to send...")
+    fun send_163(content: String, date: Date) {
+        log.info("start to send_163...")
         log.info("the message size is: ${content.length}")
         val ps = Properties()
-        //val factory = MailSSLSocketFactory()
-        //factory.isTrustAllHosts = true
         ps.put("mail.smtp.host", smtpHost)
+        ps.put("mail.smtp.auth", "true")
         //ps.put("mail.transport.protocol", "smtp")
+        //ps.put("mail.smtp.port", "25")
+        ps.put("mail.smtp.port", "465")
+        //ps.put("mail.smtp.ssl.enable", "true")
+        ps.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory")
+        //ps.put("mail.smtp.ssl.socketFactory", factory)
+        ps.put("mail.smtp.socketFactory.port", "465")
+        ps.put("mail.smtp.socketFactory.fallback", "false")
+        val session = Session.getInstance(ps, object : Authenticator() {
+            override fun getPasswordAuthentication() = PasswordAuthentication(usernameSmtp, passwordSmtp)
+        })
+        session.debug = true
+        val msg = MimeMessage(session)
+        msg.setFrom(InternetAddress(mailBoxSmtp))
+        msg.setRecipients(Message.RecipientType.TO, mailBoxPop3)
+        msg.subject = subject
+        msg.sentDate = date
+        msg.setText(content)
+        msg.saveChanges()
+        val trans = session.transport
+        //trans.connect(usernameSmtp, passwordSmtp)
+        trans.connect()
+        try {
+            trans.sendMessage(msg, msg.allRecipients)
+        } catch (e: Exception) {
+            val sw = StringWriter()
+            val pw = PrintWriter(sw)
+            e.printStackTrace(pw)
+            log.warning(sw.toString())
+            throw Exception(sw.toString())
+        } finally {
+            trans.close()
+        }
+        log.info("end to send_163 is ok!")
+    }
+
+    fun send_qq(content: String, date: Date) {
+        log.info("start to send_qq...")
+        log.info("the message size is: ${content.length}")
+        val ps = Properties()
+        val factory = MailSSLSocketFactory()
+        factory.isTrustAllHosts = true
+        ps.put("mail.smtp.host", "smtp.qq.com")
+        ps.put("mail.transport.protocol", "smtp")
         ps.put("mail.smtp.auth", "true")
         //ps.put("mail.smtp.ssl.enable", "true")
         //ps.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory")
-        // ps.put("mail.smtp.ssl.socketFactory", factory)
+        //ps.put("mail.smtp.ssl.socketFactory", factory)
         //ps.put("mail.smtp.socketFactory.port", "465")
         ps.put("mail.smtp.port", "25")
         //ps.put("mail.smtp.socketFactory.fallback", "false")
@@ -63,7 +102,7 @@ class Email(val connection: Connection) {
         msg.setText(content)
         msg.saveChanges()
         val trans = session.transport
-        trans.connect(usernameSmtp, passwordSmtp)
+        trans.connect("yangglemu132@qq.com", "gssqrygvdkdddaaf")
         try {
             trans.sendMessage(msg, msg.allRecipients)
         } catch (e: Exception) {
@@ -75,51 +114,58 @@ class Email(val connection: Connection) {
         } finally {
             trans.close()
         }
-        log.info("end to send is ok!")
+        log.info("end to send_qq is ok!")
     }
 
     fun postMsg(date: Date = Date()) {
-        send(document2String(date), date)
+        send_163(document2String(date), date)
         //deleteOldMessage()
         val timer = Timer("deleteMessage")
         timer.schedule(object : TimerTask() {
             override fun run() {
                 deleteOldMessage(date)
             }
-        }, 7000)
+        }, 15000)
     }
 
     fun deleteOldMessage(date: Date) {
         log.info("start to delete old message...")
         val session = Session.getInstance(Properties())
-        val store = session.getStore("pop3")
-        store.connect(pop3Host, usernamePop, passwordPop3)
-        val folder = store.getFolder("INBOX")
-        folder.open(Folder.READ_WRITE)
-        val today = date.toString(formatString)
-        val array = ArrayList<Message>()
-        for (msg in folder.messages) {
-            if (msg.subject != "sunshine" || isOldMessage(msg)) {
-                msg.setFlag(Flags.Flag.DELETED, true)
-            } else if (msg.sentDate.toString(formatString) == today) {
-                array.add(msg)
-            }
-        }
-        val size = array.size
-        log.info("today's messages count: $size")
-        when {
-            (size == 0) -> log.info("today has no message!")
-            (size == 1) -> log.info("today only has one message, nothing to do! ")
-            (size > 1) -> {
-                for (index in 0..size - 2) {
-                    array[index].setFlag(Flags.Flag.DELETED, true)
-                    log.info("today's old message on ${array[index].sentDate.toString("yyyy-MM-dd HH:mm:ss")} is deleted!")
+        var store: Store? = null
+        var folder: Folder? = null
+        try {
+            store = session.getStore("pop3")
+            store!!.connect(pop3Host, usernamePop, passwordPop3)
+            folder = store.getFolder("INBOX")
+            folder!!.open(Folder.READ_WRITE)
+            val today = date.toString(formatString)
+            val array = ArrayList<Message>()
+            for (msg in folder.messages) {
+                if (msg.subject != "sunshine" || isOldMessage(msg)) {
+                    msg.setFlag(Flags.Flag.DELETED, true)
+                } else if (msg.sentDate.toString(formatString) == today) {
+                    array.add(msg)
                 }
-                log.info("today's new message on ${array[size - 1].sentDate.toString("yyyy-MM-dd HH:mm:ss")} is changed!")
             }
+            val size = array.size
+            log.info("today's messages count: $size")
+            when {
+                (size == 0) -> log.info("today has no message!")
+                (size == 1) -> log.info("today only has one message, nothing to do! ")
+                (size > 1) -> {
+                    for (index in 0..size - 2) {
+                        array[index].setFlag(Flags.Flag.DELETED, true)
+                        log.info("today's old message on ${array[index].sentDate.toString("yyyy-MM-dd HH:mm:ss")} is deleted!")
+                    }
+                    log.info("today's new message on ${array[size - 1].sentDate.toString("yyyy-MM-dd HH:mm:ss")} is changed!")
+                }
+            }
+        } catch(se: Exception) {
+            throw se
+        } finally {
+            folder!!.close(true)
+            store!!.close()
         }
-        folder.close(true)
-        store.close()
         log.info("end to delete old message is ok!")
         log.fine("\r\n")
     }
